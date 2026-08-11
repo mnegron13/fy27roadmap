@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FY27 Enablement Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDF1F5;--surface:#F7F9FB;--ink:#0E1A24;--ink-soft:#3C4B58;--muted:#7C8A97;
+    --line:#D3DCE4;--build:#3E5488;--field:#1C8A8C;--trigger:#9AA7B4;--signal:#E08A2B;--breach:#C1440E;--good:#2F855A;
+    --lab:284px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1160px;margin:0 auto;padding:38px 24px 70px;}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--build);margin:0 0 12px;}
+  h1{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1.03;letter-spacing:-.02em;margin:0 0 12px;}
+  .sub{font-size:16px;color:var(--ink-soft);max-width:66ch;margin:0;}
+  .page{display:none;}
+  .page.on{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:26px 0 14px;}
+  .legend{display:flex;gap:20px;flex-wrap:wrap;font-size:14px;color:var(--ink-soft);align-items:center;}
+  .key{display:inline-flex;align-items:center;gap:8px;}
+  .sw{width:18px;height:12px;border-radius:3px;display:inline-block;}
+  .sw.build{background:var(--build);}.sw.field{background:var(--field);}.sw.trig{background:transparent;border:1.5px dashed var(--trigger);}.sw.conf{background:var(--signal);}
+  .btn{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14px;border:0;border-radius:8px;padding:11px 18px;cursor:pointer;transition:background .15s,transform .1s,opacity .15s;}
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
+  .btn.hl{background:var(--signal);color:#fff;}.btn.hl:hover{background:#cf7a1e;}
+  .on-hl .btn.hl{background:var(--breach);}
+  .btn.dark{background:var(--ink);color:#fff;}.btn.dark:hover{opacity:.88;}
+  .btn.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
+.cnote{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:11px 14px;font-size:12.5px;line-height:1.55;margin:12px 0 0;}
+.cnote .ci{flex:none;font-size:15px;line-height:1.35;}
+.cnote b{font-weight:600;}
+.cnote.info{background:var(--surface);border:1px solid var(--line);color:var(--muted);}
+.cnote.info b{color:var(--ink);}
+.cnote.consider{background:#FBF5EA;border:1px solid #ECDCC0;color:#6E5F45;}
+.cnote.consider b{color:#5A4A2F;}
+
+  .cmsg{display:none;margin:0 0 14px;background:#fbf0e2;border:1px solid var(--signal);border-left:4px solid var(--breach);border-radius:10px;padding:16px 20px;}
+  .on-hl .cmsg{display:block;animation:fade .3s ease;}
+  .cmsg h3{font-family:"Space Grotesk",sans-serif;font-size:15px;margin:0 0 6px;color:var(--breach);}
+  .cmsg p{margin:0;font-size:14px;color:var(--ink);}
+  .cmsg b{font-weight:600;}
+
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);}
+  .tl{min-width:980px;position:relative;}
+  .bandwrap{position:absolute;inset:0;display:grid;grid-template-columns:var(--lab) repeat(16,1fr);pointer-events:none;z-index:1;}
+  .band{grid-column:2 / 6;grid-row:1 / -1;background:linear-gradient(180deg,#e08a2b2e,#e08a2b16);border-left:2px solid var(--breach);border-right:2px solid var(--breach);opacity:0;transition:opacity .4s;}
+  .band .bl{position:absolute;top:54px;left:50%;transform:translateX(-50%);font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--breach);white-space:nowrap;font-weight:600;}
+  .on-hl .band{opacity:1;}
+
+  .grid{display:grid;grid-template-columns:var(--lab) repeat(16,1fr);position:relative;z-index:2;}
+  .yr{grid-row:1;text-align:center;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;color:var(--muted);padding:8px 0 4px;border-left:1px solid var(--line);}
+  .yr.y27{box-shadow:inset 2px 0 0 var(--line);}
+  .hc1{grid-row:1;}
+  .hc2{grid-row:2;border-bottom:1px solid var(--line);}
+  .m{grid-row:2;text-align:center;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-soft);padding:4px 0 9px;border-left:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .m.jan{box-shadow:inset 2px 0 0 var(--line);}
+
+  .row{grid-column:1 / -1;display:grid;grid-template-columns:var(--lab) repeat(16,1fr);border-top:1px solid #dde3ea;transition:opacity .3s;}
+  .row:hover{background:#00000008;}
+  .lab{grid-column:1;grid-row:1;padding:10px 12px 10px 16px;font-size:13px;display:flex;align-items:center;gap:8px;border-right:1px solid var(--line);background:var(--surface);position:sticky;left:0;z-index:3;}
+  .row:hover .lab{background:#f0f4f7;}
+  .lab a{color:var(--ink);text-decoration:none;}
+  .lab a:hover{color:var(--build);text-decoration:underline;}
+  .lab.parent{font-weight:600;}
+  .lab.parent .sub2{display:block;font-weight:400;font-size:11px;color:var(--muted);margin-top:1px;}
+  .lab.child{padding-left:34px;font-size:12.5px;color:var(--ink-soft);border-left:3px solid #cdd6df;}
+  .lab.child .br{color:var(--build);margin-right:2px;}
+  .track{grid-column:2 / -1;grid-row:1;display:grid;grid-template-columns:repeat(16,1fr);align-items:center;min-height:44px;position:relative;
+    background-image:repeating-linear-gradient(90deg,transparent,transparent calc(6.25% - 1px),var(--line) calc(6.25% - 1px),var(--line) 6.25%);}
+  .bar{grid-row:1;height:24px;border-radius:6px;display:flex;align-items:center;padding:0 9px;font-size:11px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;position:relative;z-index:2;cursor:default;transition:opacity .3s,background .3s,box-shadow .3s;}
+  .bar.build{background:var(--build);}
+  .bar.field{background:var(--field);}
+  .bar.umbrella{background:var(--trigger);opacity:.42;height:11px;color:transparent;}
+  .bar.trig{background:transparent;border:1.5px dashed var(--trigger);color:var(--ink-soft);height:22px;}
+  .bar.gated{opacity:.6;}
+  .off{grid-column:1/8;align-self:center;font-size:11.5px;color:var(--muted);font-style:italic;}
+  .divider{grid-column:1 / -1;padding:12px 16px 5px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);background:var(--surface);}
+
+  .on-hl .row:not(.crow){opacity:.3;}
+  .on-hl .crow .bar:not(.conf){opacity:.28;}
+  .on-hl .crow .lab{box-shadow:inset 4px 0 0 var(--signal);}
+  .on-hl .bar.conf{background:var(--signal);color:#fff;box-shadow:0 0 0 2px var(--breach),0 5px 16px #e08a2b99;z-index:6;}
+
+  #ft{position:fixed;z-index:999;background:var(--ink);color:#fff;border-radius:8px;padding:9px 12px;max-width:258px;font-size:11.5px;line-height:1.45;box-shadow:0 10px 30px #0e1a2455;opacity:0;transform:translateY(3px);transition:opacity .13s,transform .13s;pointer-events:none;}
+  #ft.show{opacity:1;transform:none;}
+  #ft b{font-family:"Space Grotesk",sans-serif;display:block;margin-bottom:3px;}
+  #ft .ln{display:block;}
+  .has-tip:focus-visible{outline:2px solid var(--signal);outline-offset:2px;}
+
+  .callout{margin-top:30px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--signal);border-radius:10px;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+  .callout p{margin:0;font-size:15px;color:var(--ink);max-width:60ch;}
+  .foot{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:74ch;}
+  .lead{font-size:16px;color:var(--ink-soft);max-width:72ch;margin:0 0 20px;}
+  table.rec{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px;}
+  table.rec th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:12px 14px;border-bottom:1px solid var(--line);background:#eef2f6;vertical-align:bottom;}
+  table.rec td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink);}
+  table.rec tr:last-child td{border-bottom:0;}
+  table.rec .init{font-weight:600;width:19%;}
+  table.rec ul{margin:0;padding-left:16px;}
+  table.rec li{margin:4px 0;}
+  .blabel{display:flex;align-items:baseline;gap:12px;margin:36px 0 4px;}
+  .blabel h2{font-family:"Space Grotesk",sans-serif;font-size:20px;margin:0;letter-spacing:-.01em;}
+  .pill{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:#2f855a1a;color:var(--good);}
+  .cap{font-size:14px;color:var(--ink-soft);margin:0 0 14px;max-width:74ch;}
+  .nav{margin-top:28px;display:flex;gap:12px;}
+  @media (max-width:680px){:root{--lab:150px;}.legend{font-size:12.5px;gap:12px;}table.rec{font-size:12px;}}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="ft"></div>
+<div class="wrap">
+
+  <!-- ============ PAGE 1 ============ -->
+  <section class="page on" id="page1">
+    <p class="eyebrow">Client Ops Internal Enablement</p>
+    <h1>FY27 Enablement Roadmap</h1>
+    <p class="sub">Every FY27 initiative the Enablement team is supporting, showing when each piece of Enablement gets built and when it reaches the field. The four AI certification levels are grouped under the AI Champions initiative they support.</p>
+    <div class="cnote info"><span class="ci">ℹ️</span><span>As of late July 2026 · bars show Enablement's own work, not the business initiative's timeline · hover any bar for exact dates</span></div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <span class="key"><span class="sw build"></span>Build Enablement</span>
+        <span class="key"><span class="sw field"></span>In the field (available &rarr; completion)</span>
+        <span class="key"><span class="sw trig"></span>Not yet scheduled</span>
+        <span class="key"><span class="sw conf"></span>Capacity conflict</span>
+      </div>
+      <button class="btn hl" id="hlBtn" aria-pressed="false">Highlight conflicts</button>
+    </div>
+    <div class="cnote consider"><span class="ci">🔎</span><span>Two FTV items David added, the <b>Sales &amp; CS Product Loop</b> and the <b>FTV Customer Advocacy Engine</b>, are shown here as submitted. Enablement recommends handing both to David's team, see page two.</span></div>
+
+    <div class="cmsg">
+      <h3>Six Enablement builds overlap in August–September</h3>
+      <p>Every one of these is in its build phase at the same time, and they are all mine to build: <b>AI Cert L1</b>, <b>AI Cert L2</b>, <b>Tiered FTV Service Model</b>, <b>Sales &amp; CS Product Loop</b>, <b>Case Management SLA Framework</b>, and <b>Launch SMS</b>. The highlighted bars below are the overlap. Everything else is dimmed so it is easy to see.</p>
+    </div>
+
+    <div class="scroll"><div class="tl">
+      <div class="bandwrap"><div class="band"><span class="bl">Aug–Sep · 6 builds at once</span></div></div>
+      <div class="grid">
+        <div class="hc1"></div>
+        <div class="yr" style="grid-column:2/12">2026</div>
+        <div class="yr y27" style="grid-column:12/18">2027</div>
+        <div class="hc2"></div>
+        <div class="m" style="grid-column:2/4">AUG</div><div class="m" style="grid-column:4/6">SEP</div>
+        <div class="m" style="grid-column:6/8">OCT</div><div class="m" style="grid-column:8/10">NOV</div>
+        <div class="m" style="grid-column:10/12">DEC</div><div class="m jan" style="grid-column:12/14">JAN</div>
+        <div class="m" style="grid-column:14/16">FEB</div><div class="m" style="grid-column:16/18">MAR</div>
+
+        <div class="row"><div class="lab parent"><a href="https://app.notion.com/p/0667072ac66a42e981133c186430c1f3" target="_blank" rel="noopener">Drive Enablement &amp; Accountability of AI Champions<span class="sub2">Jacob · enablement workstream: AI Certification Program</span></a></div>
+          <div class="track"><div class="bar umbrella has-tip" style="grid-column:1/11" data-t="AI Champions initiative · Jacob Dailey" data-d="This is a FY27 initiative that runs July 1 to December 31. The AI Certification Program is the Enablement workstream supporting it, and its phases are the rows below.">.</div></div></div>
+
+        <div class="row crow"><div class="lab child"><span class="br">&#8627;</span> AI Cert L1 · AI User</div>
+          <div class="track">
+            <div class="bar build conf has-tip" style="grid-column:1/3" data-t="AI Cert L1 · Build Enablement" data-d="||Build: August (after approval).||It nests the two prior AI paths and adds a judgment check.">Build</div>
+            <div class="bar field has-tip" style="grid-column:2/5" data-t="AI Cert L1 · In the field" data-d="||Available to the field: Aug 17.||Expected completion: Sep 30.">In field</div>
+          </div></div>
+        <div class="row crow"><div class="lab child"><span class="br">&#8627;</span> AI Cert L2 · AI Builder (personal)</div>
+          <div class="track">
+            <div class="bar build conf has-tip" style="grid-column:2/4" data-t="AI Cert L2 · Build Enablement" data-d="||Build: mid-August to mid-September.||Participant publishes a working Skill or Dust agent.">Build</div>
+            <div class="bar field has-tip" style="grid-column:5/7" data-t="AI Cert L2 · In the field" data-d="||Available to the field: Oct 1.||Expected completion: Nov 1.">In field</div>
+          </div></div>
+        <div class="row"><div class="lab child"><span class="br">&#8627;</span> AI Cert L3 · AI Builder (team)</div>
+          <div class="track">
+            <div class="bar build has-tip" style="grid-column:4/8" data-t="AI Cert L3 · Build Enablement" data-d="||Build: late September to early November (with AI Ops).||">Build</div>
+            <div class="bar field has-tip" style="grid-column:8/11" data-t="AI Cert L3 · In the field" data-d="||Available to the field: late November.||Expected completion: end of December.">In field</div>
+          </div></div>
+        <div class="row"><div class="lab child"><span class="br">&#8627;</span> AI Cert L4 · Org Builder</div>
+          <div class="track">
+            <div class="bar build has-tip" style="grid-column:11/13" data-t="AI Cert L4 · Build Enablement" data-d="||Build: January.||Depends on AI Ops + infrastructure not yet in place.">Build</div>
+            <div class="bar field has-tip" style="grid-column:13/17" data-t="AI Cert L4 · In the field" data-d="||Available to the field: February.||Expected completion: end of March.">In field</div>
+          </div></div>
+
+        <div class="row crow"><div class="lab"><a href="https://app.notion.com/p/911732e74ee542d2879a170dfee8ca8a" target="_blank" rel="noopener">Sales &amp; CS Product Loop</a></div>
+          <div class="track">
+            <div class="bar build conf has-tip" style="grid-column:1/3" data-t="Product Loop · Build Enablement · David" data-d="||Build: August (scope locks early Aug).||WorkRamp course from the SPL guide. This is Enablement's build, not the SPL business launch.">Build</div>
+            <div class="bar field has-tip" style="grid-column:3/5" data-t="Product Loop · In the field" data-d="||Available to the field: September.||Expected completion: within September.">In field</div>
+          </div></div>
+
+        <div class="row crow"><div class="lab"><a href="https://app.notion.com/p/c711f2a55bc6490895c1fa1f74279728" target="_blank" rel="noopener">Tiered FTV Service Model</a></div>
+          <div class="track">
+            <div class="bar build conf has-tip" style="grid-column:2/4" data-t="Tiered FTV · Build Enablement · David" data-d="||Build: late August to early September.||It covers two eLearnings, a CSM agent, and a table read.">Build</div>
+            <div class="bar field has-tip" style="grid-column:4/5" data-t="Tiered FTV · In the field" data-d="||Available to the field: mid-September (go-live).||Expected completion: not yet set.">In field</div>
+          </div></div>
+
+        <div class="row crow"><div class="lab"><a href="https://app.notion.com/p/388fdd08fcdc818492acd8393a323f04" target="_blank" rel="noopener">Case Management SLA Framework</a></div>
+          <div class="track">
+            <div class="bar build conf has-tip" style="grid-column:2/4" data-t="SLA Framework · Build Enablement · Colin" data-d="||Build: begins after the Aug 18 scope lock, through mid-September.||It is a manager eLearning and an IC eLearning.">Build</div>
+            <div class="bar field has-tip" style="grid-column:4/7" data-t="SLA Framework · In the field" data-d="||Available to the field: September (managers first).||Expected completion: managers Sep 25, ICs Oct 9.">In field</div>
+          </div></div>
+
+        <div class="row crow"><div class="lab"><a href="https://app.notion.com/p/0f45a9e5c86c4bb7a58de482a05277b1" target="_blank" rel="noopener">Launch SMS</a></div>
+          <div class="track">
+            <div class="bar build conf has-tip" style="grid-column:2/4" data-t="Launch SMS · Build Enablement · Rachel/Connor" data-d="||Build: late August to September (scope locks mid-Aug; gated on Connor's SMS workflow).||">Build</div>
+            <div class="bar field has-tip" style="grid-column:4/5" data-t="Launch SMS · In the field" data-d="||Available to the field: end of September.||Expected completion: not yet set.">In field</div>
+          </div></div>
+
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/4f14dbc8e00e43a2a0a036fc53ef2b83" target="_blank" rel="noopener">Answers Closer to the Specialist</a></div>
+          <div class="track">
+            <div class="bar build has-tip" style="grid-column:4/7" data-t="Specialist · Build Enablement · Rachel/Connor" data-d="||Build: September to October (scope locks Sep; folds onto AI Cert L1).||">Build</div>
+            <div class="bar field has-tip" style="grid-column:7/11" data-t="Specialist · In the field" data-d="||Available to the field: October.||Expected completion: assessed at the December checkpoint.">In field</div>
+          </div></div>
+
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/df1e803994ad4c11830deb59534af1bf" target="_blank" rel="noopener">Redesign Production Accounting</a></div>
+          <div class="track">
+            <div class="bar build has-tip" style="grid-column:6/9" data-t="Production Accounting · Build Enablement · David" data-d="||Build: October to November. Design-only through September; scope locks end of Sep.||">Build</div>
+            <div class="bar field has-tip" style="grid-column:9/11" data-t="Production Accounting · In the field" data-d="||Available to the field: November.||Expected completion: December (some components into early 2027).">In field</div>
+          </div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/391fdd08fcdc80a8b8e1cbfd9c29096e" target="_blank" rel="noopener">Commercial CS agentic-first</a></div>
+          <div class="track">
+            <div class="bar build has-tip" style="grid-column:5/9" data-t="Commercial CS · Build Enablement · Kevin" data-d="||Build: October to November.||Flipped model: Enablement builds the eLearning on the new agent-led operating model; managers run the team session. Cert handled separately.">Build</div>
+            <div class="bar field has-tip" style="grid-column:9/13" data-t="Commercial CS · In the field" data-d="||Available to the field: December.||Expected completion: end of January.">In field</div>
+          </div></div>
+
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/57221901450a45b3a99f3b58db58c470" target="_blank" rel="noopener">FTV Customer Advocacy Engine</a></div>
+          <div class="track">
+            <div class="bar build gated has-tip" style="grid-column:6/9" data-t="Advocacy Engine · Build Enablement · David" data-d="||Build: October to November, only if it clears the decide-to-scale gate at the end of September.||It is a pitch eLearning with role-play practice.">Build (if scaled)</div>
+            <div class="bar field gated has-tip" style="grid-column:9/11" data-t="Advocacy Engine · In the field" data-d="||Available to the field: November (if scaled).||Expected completion: December.">In field</div>
+          </div></div>
+
+
+
+        <div class="divider">Not yet scheduled — triggered by upstream work, timing not confirmed</div>
+
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/7cc90f9e09a646d4889ef3c8273559c3" target="_blank" rel="noopener">Increase Redundancy</a></div>
+          <div class="track"><div class="bar trig has-tip" style="grid-column:6/17" data-t="Increase Redundancy · Sam" data-d="Not a build. Ongoing governance rhythm Enablement owns from October, once the process is live. Timing not confirmed.">Ongoing governance from October</div></div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/54e9e7cb1f4c4703aa939e9653a4dcd5" target="_blank" rel="noopener">Map the Customer Journey</a></div>
+          <div class="track"><div class="bar trig has-tip" style="grid-column:11/15" data-t="Customer Journey Map · Jacob" data-d="One small eLearning reflecting the finished map. Built once the map ships. Timing not confirmed.">Small eLearning once map exists</div></div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/38bfdd08fcdc8008ab53eac0097c142b" target="_blank" rel="noopener">Customer Base Health Score</a></div>
+          <div class="track"><div class="bar trig has-tip" style="grid-column:11/17" data-t="Health Score · Kevin" data-d="||Response playbooks: build January to February 2027, in the field late February into March.||Gated on the score's Dec 31 go-live; CSMs act on it from Feb 2027 (per Kevin's Linear plan).">Playbooks once score is stable</div></div></div>
+      </div>
+    </div></div>
+
+    <div class="callout">
+      <p>Turn on <b>Highlight conflicts</b> to isolate the overlapping August and September builds. Then continue to the next page for the recommended fix.</p>
+      <button class="btn dark" id="toRec">Continue to recommendations &rarr;</button>
+    </div>
+    <p class="foot">Initiative names link to their FY27 pages in Notion.</p>
+  </section>
+
+  <!-- ============ PAGE 2 ============ -->
+  <section class="page" id="page2">
+    <p class="eyebrow">Client Ops Internal Enablement</p>
+    <h1>Recommendations</h1>
+    <p class="lead">The timelines as submitted put six Enablement builds into the August and September window, all mine to build. Here is what is being asked for, what I recommend, and why. Two moves take the crunch from six builds to five: hand the two FTV items David added back to his team to own, and move the heavy Tiered FTV build to November and December. Everything else stays as scoped.</p>
+
+    <table class="rec">
+      <thead><tr><th class="init">Initiative</th><th>Current state (as submitted)</th><th>Recommended state</th><th>Reason &amp; conflict resolved</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="init">Sales &amp; CS Product Loop</td>
+          <td><ul><li>A WorkRamp course built from the SPL guide, ready in August</li><li>One of the six August builds</li></ul></td>
+          <td><ul><li>David's team owns and enables it</li><li>Enablement does not build it</li></ul></td>
+          <td><ul><li>Purely FTV, so it belongs with David's team, not Enablement</li></ul></td>
+        </tr>
+        <tr>
+          <td class="init">FTV Customer Advocacy Engine</td>
+          <td><ul><li>A pitch eLearning with role-play, if the pilot scales</li></ul></td>
+          <td><ul><li>David's team owns it</li><li>Enablement does not build it</li></ul></td>
+          <td><ul><li>Small cohort, previously cut on that basis</li></ul></td>
+        </tr>
+        <tr>
+          <td class="init">Tiered FTV Service Model</td>
+          <td><ul><li>Two eLearnings, a CSM agent, and a table read</li><li>All of it built before the mid-September go-live</li></ul></td>
+          <td><ul><li>Build the table read and reference layer in time for the launch</li><li>Build the two eLearnings and the agent in November and December</li></ul></td>
+          <td><ul><li>The service model is still changing, so building it in November and December gives a better result</li><li>It also takes the largest build out of the crunch</li></ul></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="blabel"><h2>Roadmap with the fix applied</h2><span class="pill">Feasible, one watch item</span></div>
+    <p class="cap">This is the same roadmap with David's two FTV items handed to his team and the heavy Tiered FTV build moved to November and December. The August and September window now holds the cert work and a few light builds. The one stretch to keep an eye on is the cert build running alongside the SLA Framework.</p>
+
+    <div class="toolbar" style="margin-top:0">
+      <div class="legend">
+        <span class="key"><span class="sw build"></span>Build Enablement</span>
+        <span class="key"><span class="sw field"></span>In the field (available &rarr; completion)</span>
+        <span class="key"><span class="sw trig"></span>Not yet scheduled</span>
+      </div>
+    </div>
+
+    <div class="scroll"><div class="tl">
+      <div class="grid">
+        <div class="hc1"></div>
+        <div class="yr" style="grid-column:2/12">2026</div>
+        <div class="yr y27" style="grid-column:12/18">2027</div>
+        <div class="hc2"></div>
+        <div class="m" style="grid-column:2/4">AUG</div><div class="m" style="grid-column:4/6">SEP</div>
+        <div class="m" style="grid-column:6/8">OCT</div><div class="m" style="grid-column:8/10">NOV</div>
+        <div class="m" style="grid-column:10/12">DEC</div><div class="m jan" style="grid-column:12/14">JAN</div>
+        <div class="m" style="grid-column:14/16">FEB</div><div class="m" style="grid-column:16/18">MAR</div>
+
+        <div class="row"><div class="lab parent"><a href="https://app.notion.com/p/0667072ac66a42e981133c186430c1f3" target="_blank" rel="noopener">Drive Enablement &amp; Accountability of AI Champions<span class="sub2">Jacob · enablement workstream: AI Certification Program</span></a></div>
+          <div class="track"><div class="bar umbrella has-tip" style="grid-column:1/11" data-t="AI Champions initiative · Jacob Dailey" data-d="This is a FY27 initiative that runs July 1 to December 31. AI Certification is the Enablement workstream supporting it.">.</div></div></div>
+        <div class="row"><div class="lab child"><span class="br">&#8627;</span> AI Cert L1 · AI User</div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:1/3" data-t="AI Cert L1 · Build Enablement" data-d="||Build: August.||">Build</div><div class="bar field has-tip" style="grid-column:2/5" data-t="AI Cert L1 · In the field" data-d="||Available: Aug 17.||Expected completion: Sep 30.">In field</div></div></div>
+        <div class="row"><div class="lab child"><span class="br">&#8627;</span> AI Cert L2 · AI Builder (personal)</div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:2/4" data-t="AI Cert L2 · Build Enablement" data-d="||Build: mid-Aug to mid-Sep.||">Build</div><div class="bar field has-tip" style="grid-column:5/7" data-t="AI Cert L2 · In the field" data-d="||Available: Oct 1.||Expected completion: Nov 1.">In field</div></div></div>
+        <div class="row"><div class="lab child"><span class="br">&#8627;</span> AI Cert L3 · AI Builder (team)</div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:4/8" data-t="AI Cert L3 · Build Enablement" data-d="||Build: late Sep to early Nov.||">Build</div><div class="bar field has-tip" style="grid-column:8/11" data-t="AI Cert L3 · In the field" data-d="||Available: late November.||Expected completion: end of December.">In field</div></div></div>
+        <div class="row"><div class="lab child"><span class="br">&#8627;</span> AI Cert L4 · Org Builder</div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:11/13" data-t="AI Cert L4 · Build Enablement" data-d="||Build: January.||">Build</div><div class="bar field has-tip" style="grid-column:13/17" data-t="AI Cert L4 · In the field" data-d="||Available: February.||Expected completion: end of March.">In field</div></div></div>
+
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/c711f2a55bc6490895c1fa1f74279728" target="_blank" rel="noopener">Tiered FTV Service Model</a></div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:2/4" data-t="Tiered FTV · Build Enablement (launch-light)" data-d="||Build: late Aug–early Sep.||Table read + reference layer for the Sep go-live.">Build</div><div class="bar field has-tip" style="grid-column:4/5" data-t="Tiered FTV · In the field" data-d="||Available: mid-September (go-live).||">In field</div><div class="bar build has-tip" style="grid-column:7/9" data-t="Tiered FTV · Build Enablement (deferred)" data-d="||Build: November and December.||These are the two eLearnings and the CSM agent, moved there once the model settles.">Build (Nov–Dec)</div><div class="bar field has-tip" style="grid-column:9/11" data-t="Tiered FTV · In the field (later)" data-d="||Available: December.||">In field</div></div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/388fdd08fcdc818492acd8393a323f04" target="_blank" rel="noopener">Case Management SLA Framework</a></div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:2/4" data-t="SLA Framework · Build Enablement" data-d="||Build: after Aug 18 scope lock.||">Build</div><div class="bar field has-tip" style="grid-column:4/7" data-t="SLA Framework · In the field" data-d="||Available: September (managers first).||Expected completion: managers Sep 25, ICs Oct 9.">In field</div></div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/0f45a9e5c86c4bb7a58de482a05277b1" target="_blank" rel="noopener">Launch SMS</a></div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:2/4" data-t="Launch SMS · Build Enablement" data-d="||Build: late Aug–Sep. Gated on Connor's SMS workflow.||">Build</div><div class="bar field has-tip" style="grid-column:4/5" data-t="Launch SMS · In the field" data-d="||Available: end of September.||">In field</div></div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/4f14dbc8e00e43a2a0a036fc53ef2b83" target="_blank" rel="noopener">Answers Closer to the Specialist</a></div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:4/7" data-t="Specialist · Build Enablement" data-d="||Build: Sep–Oct. Folds onto AI Cert L1.||">Build</div><div class="bar field has-tip" style="grid-column:7/11" data-t="Specialist · In the field" data-d="||Available: October.||Expected completion: December checkpoint.">In field</div></div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/df1e803994ad4c11830deb59534af1bf" target="_blank" rel="noopener">Redesign Production Accounting</a></div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:6/9" data-t="Production Accounting · Build Enablement" data-d="||Build: October to November.||">Build</div><div class="bar field has-tip" style="grid-column:9/11" data-t="Production Accounting · In the field" data-d="||Available: November.||Expected completion: December.">In field</div></div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/391fdd08fcdc80a8b8e1cbfd9c29096e" target="_blank" rel="noopener">Commercial CS agentic-first</a></div>
+          <div class="track"><div class="bar build has-tip" style="grid-column:5/9" data-t="Commercial CS · Build Enablement" data-d="||Build: October to November.||">Build</div><div class="bar field has-tip" style="grid-column:9/13" data-t="Commercial CS · In the field" data-d="||Available: December.||Expected completion: end of January.">In field</div></div></div>
+
+        <div class="divider">Not yet scheduled — triggered by upstream work, timing not confirmed</div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/7cc90f9e09a646d4889ef3c8273559c3" target="_blank" rel="noopener">Increase Redundancy</a></div>
+          <div class="track"><div class="bar trig has-tip" style="grid-column:6/17" data-t="Increase Redundancy · Sam" data-d="Governance rhythm from October. Timing not confirmed.">Ongoing governance from October</div></div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/54e9e7cb1f4c4703aa939e9653a4dcd5" target="_blank" rel="noopener">Map the Customer Journey</a></div>
+          <div class="track"><div class="bar trig has-tip" style="grid-column:11/15" data-t="Customer Journey Map · Jacob" data-d="Small eLearning once the map ships. Timing not confirmed.">Small eLearning once map exists</div></div></div>
+        <div class="row"><div class="lab"><a href="https://app.notion.com/p/38bfdd08fcdc8008ab53eac0097c142b" target="_blank" rel="noopener">Customer Base Health Score</a></div>
+          <div class="track"><div class="bar trig has-tip" style="grid-column:11/17" data-t="Health Score · Kevin" data-d="||Response playbooks, build Jan–Feb 2027, field late Feb into March.||Gated on the Dec 31 go-live.">Playbooks once score is stable</div></div></div>
+      </div>
+    </div></div>
+
+    <p class="foot">Feedback and decisions should live in the Notion doc, not here.</p>
+    <div class="nav"><button class="btn ghost" id="back">&larr; Back to roadmap</button></div>
+  </section>
+
+</div>
+<script>
+  var ft=document.getElementById('ft');
+  function showTip(el){
+    var t=el.getAttribute('data-t')||'',d=el.getAttribute('data-d')||'';
+    var html=t?'<b>'+t+'</b>':'';
+    d.split('||').forEach(function(seg){ if(seg.trim()!=='') html+='<span class="ln">'+seg.trim()+'</span>'; });
+    ft.innerHTML=html;ft.classList.add('show');
+    var r=el.getBoundingClientRect(),tw=ft.offsetWidth,th=ft.offsetHeight;
+    var left=Math.max(8,Math.min(r.left+r.width/2-tw/2,window.innerWidth-tw-8));
+    var top=r.top-th-10; if(top<8) top=r.bottom+10;
+    ft.style.left=left+'px';ft.style.top=top+'px';
+  }
+  function hideTip(){ft.classList.remove('show');}
+  document.querySelectorAll('.has-tip').forEach(function(el){
+    el.setAttribute('tabindex','0');
+    el.addEventListener('mouseenter',function(){showTip(el);});
+    el.addEventListener('mouseleave',hideTip);
+    el.addEventListener('focus',function(){showTip(el);});
+    el.addEventListener('blur',hideTip);
+  });
+  var hl=document.getElementById('hlBtn');
+  function setHl(on){document.body.classList.toggle('on-hl',on);hl.setAttribute('aria-pressed',on);hl.textContent=on?'Hide conflicts':'Highlight conflicts';}
+  hl.addEventListener('click',function(){setHl(!document.body.classList.contains('on-hl'));});
+  function show(id){
+    hideTip();setHl(false);
+    document.querySelectorAll('.page').forEach(function(p){p.classList.toggle('on',p.id===id);});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.getElementById('toRec').addEventListener('click',function(){show('page2');});
+  document.getElementById('back').addEventListener('click',function(){show('page1');});
+</script>
+</body>
+</html>
